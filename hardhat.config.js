@@ -17,9 +17,6 @@ module.exports = {
     hardhat: {
       chainId: 31337,
       blockConfirmations: 1,
-      forking: {
-        url: MAINNET_RPC_URL,
-      },
     },
     sepolia: {
       url: SEPOLIA_RPC_URL,
