@@ -9,7 +9,9 @@
     "hardhat-deploy": "^0.11.26"
   },
   "dependencies": {
+    "@pinata/sdk": "^2.1.0",
     "dotenv": "^16.0.3",
+    "path": "^0.12.7",
     "solhint": "^3.4.1"
   }
 }
