@@ -120,4 +120,4 @@ const handleTokenUris = async () => {
   return tokenUris;
 };
 
-module.exports.tags = ["all", "randomipfsnft"];
+module.exports.tags = ["all", "randomipfs"];
