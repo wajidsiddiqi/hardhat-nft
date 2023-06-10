@@ -24,12 +24,17 @@ const metadataTemplate = {
 };
 
 const VRF_SUB_FUND_AMMOUNT = ethers.utils.parseEther("2");
+const tokenUris = [
+  "ipfs://QmQs4yASJakykKzcUYiJoQEFptCuufghNA3S5J2CkD47tp",
+  "ipfs://QmXry9jwWVKfbt6V87Gzd97WJ5LGAmtyWY7znSQXCRysv9",
+  "ipfs://QmX5V7Xc31vMfM8tYgrNefix1WCFmiMqpLzjDtk6PgTQd2",
+];
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
   const chainId = network.config.chainId;
-  let vrfCoordinatorV2Address, subscriptionId, tokenUris;
+  let vrfCoordinatorV2Address, subscriptionId;
 
   if (process.env.UPLOAD_TO_PINATA == "true") {
     tokenUris = await handleTokenUris();
@@ -54,17 +59,16 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   const gasLane = networkConfig[chainId]["gasLane"];
   const callbackGasLimit = networkConfig[chainId]["callbackGasLimit"];
-  const dogTokenUris = networkConfig[chainId]["dogTokenUris"];
   const mintFee = networkConfig[chainId]["mintFee"];
 
-  // const args = [
-  //   vrfCoordinatorV2Address,
-  //   gasLane,
-  //   subscriptionId,
-  //   callbackGasLimit,
-  //   dogTokenUris,
-  //   mintFee,
-  // ];
+  const args = [
+    vrfCoordinatorV2Address,
+    gasLane,
+    subscriptionId,
+    callbackGasLimit,
+    tokenUris,
+    mintFee,
+  ];
   const randomIpfsNft = await deploy("RandomIpfsNft", {
     from: deployer,
     args: args,
@@ -95,16 +99,14 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   log("---------------------------------------");
 };
 
-module.exports.tags = ["all", "randomipfsnft"];
-
 const handleTokenUris = async () => {
   tokenUris = [];
-  const { responses: imageUploadResponses, file } = await storeImages(
+  const { responses: imageUploadResponses, files } = await storeImages(
     imagesLocation
   );
-  for (imageUploadResponseIndex in imageUploadResponses) {
+  for (let imageUploadResponseIndex in imageUploadResponses) {
     let tokenUriMetadata = { ...metadataTemplate };
-    tokenUriMetadata.name = file[imageUploadResponseIndex].replace(".png", "");
+    tokenUriMetadata.name = files[imageUploadResponseIndex].replace(".png", "");
     tokenUriMetadata.description = `An adorable ${tokenUriMetadata.name} pup!`;
     tokenUriMetadata.image = `ipfs://${imageUploadResponses[imageUploadResponseIndex].IpfsHash}`;
     console.log(`Uploading ${tokenUriMetadata.name}...`);
@@ -117,3 +119,5 @@ const handleTokenUris = async () => {
   console.log(tokenUris);
   return tokenUris;
 };
+
+module.exports.tags = ["all", "randomipfsnft"];
