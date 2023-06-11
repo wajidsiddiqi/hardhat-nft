@@ -26,7 +26,10 @@ const { developmentChains } = require("../../helper-hardhat-config");
 
       describe("requestNft", () => {
         it("fails if payment isn't sent with the request", async function () {
-          await expect(randomIpfsNft.requestNft()).to.be.revertedWith(
+          await expect(
+            randomIpfsNft.requestNft()
+          ).to.be.revertedWithCustomError(
+            randomIpfsNft,
             "RandomIpfsNft__NeedMoreETHSent"
           );
         });
@@ -36,7 +39,10 @@ const { developmentChains } = require("../../helper-hardhat-config");
             randomIpfsNft.requestNft({
               value: fee.sub(ethers.utils.parseEther("0.001")),
             })
-          ).to.be.revertedWith("RandomIpfsNft__NeedMoreETHSent");
+          ).to.be.revertedWithCustomError(
+            randomIpfsNft,
+            "RandomIpfsNft__NeedMoreETHSent"
+          );
         });
         it("emits an event and kicks off a random word request", async function () {
           const fee = await randomIpfsNft.getMintFee();
@@ -93,7 +99,10 @@ const { developmentChains } = require("../../helper-hardhat-config");
         it("should revert if moddedRng > 99", async function () {
           await expect(
             randomIpfsNft.getBreedFromModdedRng(100)
-          ).to.be.revertedWith("RandomIpfsNft__RangeOutOfBounds");
+          ).to.be.revertedWithCustomError(
+            randomIpfsNft,
+            "RandomIpfsNft__RangeOutOfBounds"
+          );
         });
       });
     });
