@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@pinata/sdk": "^2.1.0",
+    "base64-sol": "^1.0.1",
     "dotenv": "^16.0.3",
     "path": "^0.12.7",
     "solhint": "^3.4.1"
